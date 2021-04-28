@@ -5,7 +5,10 @@
     "test": "web-test-runner \"src/**/*.test.ts\""
   },
   "dependencies": {
-    "svelte": "^3.24.0"
+    "@snowpack/plugin-postcss": "^1.2.2",
+    "autoprefixer": "^10.2.5",
+    "svelte": "^3.24.0",
+    "tailwindcss": "^2.1.2"
   },
   "devDependencies": {
     "@snowpack/plugin-dotenv": "^2.0.5",
