@@ -44,6 +44,11 @@ export default abstract class Entity {
    */
   public abstract action(pos: Vector): void;
 
+  /**
+   * Mouse has bumped into the entity. Do something
+   *
+   * @param mouse mouse position
+   */
   public abstract bump(mouse: Vector): void;
 
   /**

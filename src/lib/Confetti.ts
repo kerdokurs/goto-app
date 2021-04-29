@@ -9,7 +9,7 @@ export default class Confetti extends Entity {
 
   public action(pos: Vector): void {}
 
-  public bump(): void {}
+  public bump(mouse: Vector): void {}
 
   protected isAction(): boolean {
     return false;

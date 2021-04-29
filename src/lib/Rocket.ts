@@ -10,26 +10,32 @@ export default class Rocket extends Entity {
     this.setSize(4);
   }
 
+  /**
+   * This method should "explode" the rocket into
+   * confetti around the rocket.
+   *
+   * @param pos position of action
+   */
   public action(pos: Vector): void {
     const confetties: Entity[] = [];
 
-    // outer ring
+    // Outer ring
     let confettiAmt = Math.floor(Math.random() * 20);
     let angleIncrement = 360 / confettiAmt;
-    let startAngle = Math.random() * 360;
+    let currentAngle = Math.random() * 360;
 
-    let currentAngle = startAngle;
     for (let i = 0; i < confettiAmt; i++) {
-      // i have no clue why this does not work properly
-      // all of the confetti clumps together
-      // it should not do that. there seems to be a memory
-      // issue with typescript of svelte specifically
+      // I have no clue why this does not work properly.
+      // All of the confetti clumps together.
+      // It should not do that. There seems to be a memory
+      // issue with typescript of svelte specifically where
+      // each of the vectors generated will be nearly identical.
+      // This could also be some of my miscalculations or bad
+      // implementations.
       const acc: Vector = {
         x: Math.cos(degToRad(currentAngle)) * 20,
         y: Math.sin(degToRad(currentAngle)) * 20,
       };
-
-      console.log(currentAngle);
 
       const confetti = new Confetti(pos, acc, this.addEntities);
 
@@ -42,7 +48,7 @@ export default class Rocket extends Entity {
     // inner ring
     confettiAmt = Math.floor(Math.random() * 10);
     angleIncrement = 360 / confettiAmt;
-    startAngle = Math.random() * 360;
+    currentAngle = Math.random() * 360;
 
     for (let i = 0; i < confettiAmt; i++) {
       // generating a acceleration vector in the direction
@@ -72,6 +78,12 @@ export default class Rocket extends Entity {
     this.acc.y += dy;
   }
 
+  /**
+   * Action time 😎 is when the rocket is at its highest
+   * point.
+   *
+   * @returns whether to start the action
+   */
   protected isAction(): boolean {
     return this.acc.y >= 0;
   }
