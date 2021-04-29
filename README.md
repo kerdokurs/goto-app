@@ -15,7 +15,7 @@ The app is build with [Svelte](https://svelte.dev/) (using [Snowpack](https://ww
 - Navigate into the app root directory
 - Run `npm i`
 - For **development** environment run `npm start`. This will start a Snowpack development server.
-- For **production** build run `npm run build`. This will bundle the app to the `build` directory. There you can open the app. It is recommended to use a simple single-page-application server to run the app. I recommend live-server.
+- For **production (optimised)** build run `npm run build`. This will bundle the app to the `build` directory. There you can open the app. It is recommended to use a simple single-page-application server to run the app. I recommend live-server.
 
 ## Bugs
 
