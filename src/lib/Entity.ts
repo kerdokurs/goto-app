@@ -1,20 +1,18 @@
 import { radToDeg } from './utils';
-import Vector from './Vector';
+import type Vector from './Vector';
 
 export default abstract class Entity {
-  protected rot: number = 0;
   protected size: number = 4;
 
-  protected acc: Vector = new Vector(0, 1);
-
-  protected initialDir = -45;
-  protected dir: Vector = new Vector(0, 1);
+  protected rot: number = 0;
+  protected initialRot: number = 0;
 
   protected remove: boolean = false;
 
   constructor(
     protected emoji: string,
     protected pos: Vector,
+    protected acc: Vector,
     protected addEntities: Function
   ) {}
 
@@ -36,9 +34,7 @@ export default abstract class Entity {
     }
 
     // Getting the direction the entity should face
-    this.dir.set(this.acc);
-    this.dir.normalize();
-    this.rot = -radToDeg(Math.atan(this.dir.x / this.dir.y)) + this.initialDir;
+    this.rot = -radToDeg(Math.atan(this.acc.x / this.acc.y)) + this.initialRot;
   }
 
   /**
@@ -61,14 +57,6 @@ export default abstract class Entity {
 
   public setPos(pos: Vector): void {
     this.pos = pos;
-  }
-
-  public getAcc(): Vector {
-    return this.acc;
-  }
-
-  public setAcc(acc: Vector): void {
-    this.acc = acc;
   }
 
   public getRot(): number {

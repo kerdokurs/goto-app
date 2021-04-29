@@ -2,8 +2,8 @@ import Entity from './Entity';
 import type Vector from './Vector';
 
 export default class Confetti extends Entity {
-  constructor(pos: Vector, addEntities: Function) {
-    super('✨', pos, addEntities);
+  constructor(pos: Vector, acc: Vector, addEntities: Function) {
+    super('✨', pos, acc, addEntities);
     this.setSize(2);
   }
 

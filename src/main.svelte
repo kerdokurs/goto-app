@@ -3,7 +3,7 @@
   import type Entity from './lib/Entity';
   import Rocket from './lib/Rocket';
   import { getCurrentMilliseconds } from './lib/utils';
-  import Vector from './lib/Vector';
+  import type Vector from './lib/Vector';
 
   let width: number = 0;
   let height: number = 0;
@@ -22,12 +22,13 @@
   const generateNewRockets = (amt: number) => {
     addEntities(
       [...Array(amt).keys()].map((i) => {
-        const pos = new Vector(Math.random() * (width - 40) + 20, height - 10);
-        const rocket = new Rocket(pos, addEntities);
+        const pos: Vector = {
+          x: Math.random() * (width - 40) + 20,
+          y: height - 10,
+        };
+        const acc = { x: -Math.random() * 20, y: -Math.random() * 200 - 450 };
+        const rocket = new Rocket(pos, acc, addEntities);
 
-        const acc = new Vector(-Math.random() * 20, -Math.random() * 200 - 450);
-
-        rocket.setAcc(acc);
         return rocket;
       })
     );
@@ -104,7 +105,7 @@
       font-size: {entity.getSize() /
         2}em;
       "
-      on:mouseover={() => entity.bump(new Vector(mX, mY))}
+      on:mouseover={() => entity.bump({ x: mX, y: mY })}
     >
       {entity.getEmoji()}
     </span>

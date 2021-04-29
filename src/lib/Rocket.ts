@@ -1,12 +1,12 @@
 import Confetti from './Confetti';
 import Entity from './Entity';
-import Vector from './Vector';
+import type Vector from './Vector';
 import { degToRad } from './utils';
 
 export default class Rocket extends Entity {
-  constructor(pos: Vector, addEntities: Function) {
-    super('🚀', pos, addEntities);
-    this.initialDir = -45;
+  constructor(pos: Vector, acc: Vector, addEntities: Function) {
+    super('🚀', pos, acc, addEntities);
+    this.initialRot = -45;
     this.setSize(4);
   }
 
@@ -24,15 +24,14 @@ export default class Rocket extends Entity {
       // all of the confetti clumps together
       // it should not do that. there seems to be a memory
       // issue with typescript of svelte specifically
-      const vec = new Vector(
-        Math.cos(degToRad(currentAngle)) * 20,
-        Math.sin(degToRad(currentAngle)) * 20
-      );
+      const acc: Vector = {
+        x: Math.cos(degToRad(currentAngle)) * 20,
+        y: Math.sin(degToRad(currentAngle)) * 20,
+      };
 
       console.log(currentAngle);
 
-      const confetti = new Confetti(pos, this.addEntities);
-      confetti.setAcc(vec);
+      const confetti = new Confetti(pos, acc, this.addEntities);
 
       confetties.push(confetti);
 
@@ -48,13 +47,12 @@ export default class Rocket extends Entity {
     for (let i = 0; i < confettiAmt; i++) {
       // generating a acceleration vector in the direction
       // of the ray from this.pos along the angle
-      const vec = new Vector(
-        Math.cos(degToRad(currentAngle)) * 20,
-        Math.sin(degToRad(currentAngle)) * 128
-      );
+      const acc: Vector = {
+        x: Math.cos(degToRad(currentAngle)) * 20,
+        y: Math.sin(degToRad(currentAngle)) * 128,
+      };
 
-      const confetti = new Confetti(pos, this.addEntities);
-      confetti.setAcc(vec);
+      const confetti = new Confetti(pos, acc, this.addEntities);
 
       confetties.push(confetti);
 
