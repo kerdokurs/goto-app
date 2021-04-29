@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import type Entity from './lib/Entity';
   import Rocket from './lib/Rocket';
+  import { getCurrentMilliseconds } from './lib/utils';
   import Vector from './lib/Vector';
 
   let width: number = 0;
@@ -15,27 +16,27 @@
   let _entities: Entity[] = [];
 
   const addEntities = (newEntities: Entity[]) => {
-    console.log('test');
     _entities = [..._entities, ...newEntities];
+  };
+
+  const generateNewRockets = (amt: number) => {
+    addEntities(
+      [...Array(amt).keys()].map((i) => {
+        const pos = new Vector(Math.random() * (width - 40) + 20, height - 10);
+        const rocket = new Rocket(pos, addEntities);
+
+        const acc = new Vector(-Math.random() * 20, -Math.random() * 200 - 450);
+
+        rocket.setAcc(acc);
+        return rocket;
+      })
+    );
   };
 
   onMount(() => {
     let frame: any;
 
-    // entities = [...Array(5).keys()].map(
-    //   (i) =>
-    //     new Rocket(new Vector(Math.random() * i * 60, Math.random() * i * 100))
-    // );
-
-    entities = [...Array(10).keys()].map((i) => {
-      const pos = new Vector(Math.random() * width, height - 10);
-      const rocket = new Rocket(pos, addEntities);
-
-      const acc = new Vector(-Math.random() * 10, -Math.random() * 200 - 300);
-
-      rocket.setAcc(acc);
-      return rocket;
-    });
+    generateNewRockets(10);
 
     let lastTime: number = getCurrentMilliseconds();
     let timer: number = 0;
@@ -50,43 +51,28 @@
       frame = requestAnimationFrame(loop);
 
       entities = entities.map((entity) => {
-        // entity.move(Math.random(), Math.random());
-        // entity.setPos(
-        //   new Vector(mX - entity.getSize() * 6, mY - entity.getSize() * 6)
-        // );
         entity.move(GRAVITY, dt);
 
         return entity;
       });
 
+      // removing entities that should be removed
       entities = entities.filter(
         (e) =>
           !e.shouldRemove() &&
-          e.getPos().y + e.getSize() <= height &&
+          e.getPos().y + 2 * e.getSize() <= height &&
           e.getPos().x + e.getSize() <= width
       );
 
+      // adding new entities
       if (_entities.length) {
         entities = [...entities, ..._entities];
         _entities = [];
       }
 
-      if (timer >= 1) {
-        entities = [
-          ...entities,
-          ...[...Array(10).keys()].map((i) => {
-            const pos = new Vector(Math.random() * width, height - 10);
-            const rocket = new Rocket(pos, addEntities);
-
-            const acc = new Vector(
-              -Math.random() * 10,
-              -Math.random() * 200 - 300
-            );
-
-            rocket.setAcc(acc);
-            return rocket;
-          }),
-        ];
+      // adding new rockets every 1.5 seconds
+      if (timer >= 1.5) {
+        generateNewRockets(10);
         timer = 0;
       }
     };
@@ -100,33 +86,57 @@
     mX = e.clientX;
     mY = e.clientY;
   };
-
-  const getCurrentMilliseconds = (): number => new Date().getTime();
 </script>
 
-<svelte:window
-  on:mousemove={onMouseMove}
-  bind:innerWidth={width}
-  bind:innerHeight={height}
-/>
+<svelte:window on:mousemove={onMouseMove} />
 
-{#each entities as entity}
-  <span
-    class="entity"
-    style="
-    left: {entity.getPos().x}px; top: {entity.getPos()
-      .y}px; transform: rotate({entity.getRot()}deg);
+<div id="space" bind:clientWidth={width} bind:clientHeight={height}>
+  <div id="wishes">
+    <h1>Palju õnne,</h1>
+    <h1>gotoAndPlay!</h1>
+  </div>
+  {#each entities as entity}
+    <span
+      class="entity"
+      style="
+  left: {entity.getPos().x}px; top: {entity.getPos()
+        .y}px; transform: rotate({entity.getRot()}deg);
       font-size: {entity.getSize() /
-      2}em;
+        2}em;
       "
-  >
-    {entity.getEmoji()}
-  </span>
-{/each}
+      on:mouseover={() => entity.bump(new Vector(mX, mY))}
+    >
+      {entity.getEmoji()}
+    </span>
+  {/each}
+</div>
 
 <style>
   .entity {
     position: absolute;
     cursor: default;
+  }
+
+  #wishes {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+    line-height: 2em;
+    font-size: 10em;
+
+    cursor: default;
+
+    color: #ffffffab;
+  }
+
+  #space {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+
+    background: #191919;
   }
 </style>

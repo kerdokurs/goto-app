@@ -1,6 +1,7 @@
 import Confetti from './Confetti';
 import Entity from './Entity';
 import Vector from './Vector';
+import { degToRad } from './utils';
 
 export default class Rocket extends Entity {
   constructor(pos: Vector, addEntities: Function) {
@@ -10,17 +11,22 @@ export default class Rocket extends Entity {
   }
 
   public action(pos: Vector): void {
+    const confetties: Entity[] = [];
+
+    // outer ring
     let confettiAmt = Math.floor(Math.random() * 20);
     let angleIncrement = 360 / confettiAmt;
     let startAngle = Math.random() * 360;
 
-    const confetties: Entity[] = [];
-
     let currentAngle = startAngle;
     for (let i = 0; i < confettiAmt; i++) {
+      // i have no clue why this does not work properly
+      // all of the confetti clumps together
+      // it should not do that. there seems to be a memory
+      // issue with typescript of svelte specifically
       const vec = new Vector(
         Math.cos(degToRad(currentAngle)) * 20,
-        Math.sin(degToRad(currentAngle)) * 128
+        Math.sin(degToRad(currentAngle)) * 20
       );
 
       console.log(currentAngle);
@@ -34,11 +40,14 @@ export default class Rocket extends Entity {
       currentAngle %= 360;
     }
 
+    // inner ring
     confettiAmt = Math.floor(Math.random() * 10);
     angleIncrement = 360 / confettiAmt;
     startAngle = Math.random() * 360;
 
     for (let i = 0; i < confettiAmt; i++) {
+      // generating a acceleration vector in the direction
+      // of the ray from this.pos along the angle
       const vec = new Vector(
         Math.cos(degToRad(currentAngle)) * 20,
         Math.sin(degToRad(currentAngle)) * 128
@@ -57,9 +66,15 @@ export default class Rocket extends Entity {
     this.addEntities(confetties);
   }
 
+  public bump(mouse: Vector): void {
+    const dx = this.pos.x - mouse.x;
+    const dy = this.pos.y - mouse.y;
+
+    this.acc.x += dx;
+    this.acc.y += dy;
+  }
+
   protected isAction(): boolean {
     return this.acc.y >= 0;
   }
 }
-
-const degToRad = (deg: number): number => (Math.PI * deg) / 180.0;

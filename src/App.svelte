@@ -6,6 +6,14 @@
   <Main />
 </main>
 
+<svelte:head>
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap"
+    rel="stylesheet"
+  />
+</svelte:head>
+
 <style lang="postcss">
   @tailwind base;
   @tailwind components;
@@ -15,11 +23,6 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-  }
-
-  :global(body) {
-    background: url(/linn.jpg);
-    background-repeat: no-repeat;
-    background-size: cover;
+    font-family: 'Krona One', sans-serif;
   }
 </style>

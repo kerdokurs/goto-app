@@ -1,3 +1,4 @@
+import { radToDeg } from './utils';
 import Vector from './Vector';
 
 export default abstract class Entity {
@@ -37,7 +38,7 @@ export default abstract class Entity {
     // Getting the direction the entity should face
     this.dir.set(this.acc);
     this.dir.normalize();
-    this.rot = -radToDeg(this.dir.x / this.dir.y) + this.initialDir;
+    this.rot = -radToDeg(Math.atan(this.dir.x / this.dir.y)) + this.initialDir;
   }
 
   /**
@@ -46,6 +47,8 @@ export default abstract class Entity {
    * @param pos position of action
    */
   public abstract action(pos: Vector): void;
+
+  public abstract bump(mouse: Vector): void;
 
   /**
    * Is it "action time" 😎 yet?
@@ -88,5 +91,3 @@ export default abstract class Entity {
     return this.remove;
   }
 }
-
-const radToDeg = (rad: number): number => (180.0 * rad) / Math.PI;
